@@ -1,5 +1,5 @@
 <template>
-  <div class="plate" v-if="todos.length > 0">
+  <div class="gap" v-if="todos.length > 0">
     <h4 style="font-family: 'Days One'; cursor: default; color: #7E7E7E;">{{todos[0].date}}</h4>
     <transition-group name="user-list">
       <TodoListItem
@@ -30,7 +30,9 @@ export default {
 </script>
 
 <style scoped>
-  
+  .gap {
+    padding-bottom: 30px;
+  }
 </style>
 
     
