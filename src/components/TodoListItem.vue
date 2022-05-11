@@ -1,9 +1,26 @@
 <template>
   <div class="todo">
     <div class="colorline" :class="{'colorLineDoneCompleted': !progress}"/>
-    <div class="colorline2" :class="{'colorLineDoneCompleted': !progress}"/>
     <div class="todobg"/>
+    <div v-if="!editing">
       <div class="todotext" :class="{'textDoneCompleted': !progress}"> {{ content }}  </div>
+      
+      <div class="controlButtons">
+        <button class="controlButtonEdit material-icons" @click="nowEditing">edit</button>
+        <button class="controlButtonDone material-icons" :class="{'controlButtonDoneCompleted': !progress}" @click="toggleTodo">done</button>
+        <button class="controlButtonCancel material-icons" @click="rem">cancel</button>
+      </div>
+    </div>
+    <div v-else>
+      <div class="todotext">
+        <input class="todoinput" @keydown.enter="updateTodo" v-model="newContent"/>
+        <input class="todoinput" @keydown.enter="updateTodo" v-model="newDate"/>
+      </div>
+      <div class="controlButtons">
+          <button class="controlButtonAdd material-icons" @click="updateTodo">done</button>
+          <button class="controlButtonCancel material-icons" @click="cancelUpdateTodo">cancel</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -20,10 +37,13 @@ export default {
 .todo{
   position: relative;
   height: 100px;
-  width: 500px;
+  max-width: 1200px;
   margin: auto;
   text-align: center;
+
+  display: flex;
 }
+
 .todobg{
   position: absolute;
   top: 0;
@@ -34,7 +54,13 @@ export default {
   border-radius: 20px;
   height: 100%;
   width: 99%;
+
+  max-width: 1200px;
+  display: flex;
+
+  border: 1px solid #c4c4c4;
 }
+
 .colorline{
   position: absolute;
   top: 2%;
@@ -46,55 +72,50 @@ export default {
   border-radius: 20px;
   height: 96%;
   width: 100%;
+
+
 }
-.colorline2{
-  position: absolute;
-  top: 2%;
-  left: 1%;
-  right: 10;
-  margin: auto;
-  z-index: -2;
-  margin: auto ;
-  background: coral;
-  border-radius: 20px;
-  height: 96%;
-  width: 100%;
-}
+
 .colorLineDoneCompleted{
    background: green; 
 }
 .todotext{
-    font-size: 20px;
   position: absolute;
-  margin-left: 16%;
+  margin-left: 4%;
   display: flex;
-  justify-content: center;
-  text-align: center;
+  justify-content: left;
+  text-align: left;
   align-items: center;
   height: 100%;
-  width: 67%;
+  max-width: 80%;
+
+  font-size: 20px;
+  word-wrap: break-word;
 }
 .tododate{
-    font-size: 20px;
   position: absolute;
-  margin-left: 15%;
+  margin-left: 5%;
   margin-top: 3%;
   display: flex;
-  justify-content: center;
-  text-align: center;
+  justify-content: left;
+  text-align: left;
   align-items: center;
   height: 100%;
   width: 67%;
+
+  color: grey;
 }
 .textDoneCompleted{
     text-decoration: line-through;
+    color: #ff3232;
+    opacity: 0.8;
 }
 .controlButtons{
   margin-right: 5%;
   position: absolute;
   top: 0;
-  right: 0;
-  width: 20%;
+  right: -5%;
+  width: 12%;
   height: 100%;
   display: flex;
   justify-content: space-evenly;
