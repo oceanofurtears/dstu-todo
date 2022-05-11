@@ -88,6 +88,8 @@ export default {
 
   max-width: 1200px;
   display: flex;
+
+  border: 1px solid #c4c4c4;
 }
 
 .colorline{
