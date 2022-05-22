@@ -1,5 +1,4 @@
 <template>
-<!-- <UserInfo/> -->
  <div class="mb-3 mt-5 text-center">
             <img src="http://international.donstu.ru/wp-content/uploads/2019/01/IMG_4963.png" alt="DSTU Logo" class="logo">
             <h1>Todo list</h1>
@@ -44,14 +43,13 @@
 import { computed, ref } from 'vue'
 import Todo from "../components/Todo.vue"
 import NewTodo from "../components/NewTodo.vue"
-import UserInfo from "../components/UserInfo.vue"
 import TodoGroup from "../components/TodoByDate.vue"
 import TodoListItem from "../components/TodoListItem.vue"
 
 export default {
   name: 'HomeView',
   components: {
-    Todo, NewTodo, UserInfo, TodoGroup, TodoListItem
+    Todo, NewTodo, TodoGroup, TodoListItem
   },
   setup(){
     //initial navigation
@@ -136,14 +134,9 @@ export default {
               temp.push(todos.value[j])
             
             } 
-          }
-          dataGroup.push(temp)
-         
-          
-
-        }    
-                dataGroupDone = dataGroup
-                 
+          }dataGroup.push(temp)
+ 
+        }dataGroupDone = dataGroup        
 
         return dataGroupDone
     })
@@ -177,8 +170,8 @@ export default {
         }
       })
     }
-    let array = [[{content:'aaa'}],[{content:'bbb'}]]
-    return {view_all, completed, ongoing, addit, selectNav, todos, dataGroupDone, Completed, Ongoing, datanav, Datanav, array,  toggleOngoing, removeTodo, updateTodos, changeContent}
+    
+    return {view_all, completed, ongoing, addit, selectNav, todos, dataGroupDone, Completed, Ongoing, datanav, Datanav, toggleOngoing, removeTodo, updateTodos, changeContent}
   }
 }
 </script>

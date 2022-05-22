@@ -4,7 +4,7 @@
       <div
         class="col-12 col-sm-8 col-md-6 col-lg-4 offset-0 offset-sm-2 offset-md-3 offset-lg-4"
       >
-        <form @submit.prevent="loginWithEmailAndPassword">
+        <form @submit.prevent="logInUser">
           <div class="mb-3 text-center">
             <img src="http://international.donstu.ru/wp-content/uploads/2019/01/IMG_4963.png" alt="DSTU Logo" class="logo">
             <h1>DSTU Todo list</h1>
@@ -17,7 +17,7 @@
               type="email"
               name="email"
               id="email"
-              v-model="this.email"
+              v-model="email"
               placeholder="name@example.com"
               required
             />
@@ -29,8 +29,8 @@
                 :type="this.isPasswordVisible ? 'text' : 'password'"
                 class="form-control"
                 name="password"
-                placeholder="Your secure password"
-                v-model="this.password"
+                placeholder="Your password"
+                v-model="password"
                 required
               />
               <div class="input-group-text">
@@ -44,7 +44,7 @@
             </div>
           </div>
           <div class="d-flex justify-content-center align-items-center">
-            <button class="btn btn-primary"  >Sign In</button>
+            <button class="btn btn-primary">Sign In</button>
             <span class="ms-3 text-end">
               Not registered yet?
               <router-link to="/sign-up" class="btn btn-primary">Sign Up</router-link>
@@ -58,33 +58,59 @@
 </template>
 
 <script>
-import {reactive} from 'vue';
+
 import {useRouter} from "vue-router";
+import axios from "axios";
+
 export default {
+
   name: "SignInView",
+
   data() {
     return {
       email: "",
       password: "",
-      message: "",
       isPasswordVisible: false,
     };
   },
+
+  methods: {
+
+    async logInUser() {
+      let userList = [];
+      let isUserFound = false;
+
+      const data = await axios.request(
+          // 'http://localhost:5000/api/Authentication/users',
+           'https://jsonplaceholder.typicode.com/users', //! test api
+            {email:this.email,
+            username:this.password})
+              .then(function (response) {
+                userList = response.data;
+            })
+              .catch(function (error) {
+                console.log(error);
+            });
+        
+        try {
+          for (let user = 0; user < userList.length; user++) {
+            if (this.email === userList[user].email & 
+                this.password === userList[user].username) {
+              isUserFound = true;
+              this.$router.push('/');
+              break;
+            }
+            
+          };
+        }
+        finally {
+          if (!isUserFound) {
+            alert("Пользователь не найден");
+          }
+        }
+    },
+  }
   
-  
-  // methods:{
-  //   loginWithEmailAndPassword(e){
-  //       e.preventDefault()
-  //   const formData = {
-  //       email: this.email,
-  //       password: this.password,
-  //     } 
-  //     console.log(formData) 
-  //     this.$router.push('/')
-  // }
- 
-  // },
-   
 }
 
   </script>
