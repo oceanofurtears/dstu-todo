@@ -1,42 +1,44 @@
 <template>
- <div class="mb-3 mt-5 text-center">
-            <img src="http://international.donstu.ru/wp-content/uploads/2019/01/IMG_4963.png" alt="DSTU Logo" class="logo">
-            <h1>Todo list</h1>
-          </div>
-  
-  <div class="navv">
-    <span :class="{'navs' : !view_all, 'navs-active' : view_all}" @click="selectNav(1)">VIEW ALL</span>
-    <span :class="{'navs' : !completed, 'navs-active' : completed}" @click="selectNav(2)">COMPLETED</span>
-    <span :class="{'navs' : !ongoing, 'navs-active' : ongoing}" @click="selectNav(3)">ONGOING</span>
-    <span :class="{'navs' : !datanav, 'navs-active' : datanav}" @click="selectNav(5)">BY DATE</span>
-    <span :class="{'navsPlus' : !addit, 'navs-activePlus' : addit}" @click="selectNav(4)">+</span>
-  </div>
+  <div class="sequre">
+    <div class="mb-3 mt-5 text-center">
+              <img src="http://international.donstu.ru/wp-content/uploads/2019/01/IMG_4963.png" alt="DSTU Logo" class="logo">
+              <h1>Todo list</h1>
+            </div>
+    
+    <div class="navv">
+      <span :class="{'navs' : !view_all, 'navs-active' : view_all}" @click="selectNav(1)">VIEW ALL</span>
+      <span :class="{'navs' : !completed, 'navs-active' : completed}" @click="selectNav(2)">COMPLETED</span>
+      <span :class="{'navs' : !ongoing, 'navs-active' : ongoing}" @click="selectNav(3)">ONGOING</span>
+      <span :class="{'navs' : !datanav, 'navs-active' : datanav}" @click="selectNav(5)">BY DATE</span>
+      <span :class="{'navsPlus' : !addit, 'navs-activePlus' : addit}" @click="selectNav(4)">+</span>
+    </div>
 
-  <div v-if="view_all">
-    <div class="content" v-for="todo in todos" :key="todo">
+    <div v-if="view_all">
+      <div class="content" v-for="todo in todos" :key="todo">
+        <Todo :content="todo.content" :id="todo.id" :progress="todo.inProgress" :date="todo.date" @changedProgress="toggleOngoing" @remmed="removeTodo" @updatedContent="changeContent"/>
+      </div>
+    </div>
+    <div v-if="completed">
+      <div class="content" v-for="todo in Completed" :key="todo">
+        <Todo :content="todo.content" :id="todo.id" :progress="todo.inProgress" :date="todo.date" @changedProgress="toggleOngoing" @remmed="removeTodo" @updatedContent="changeContent"/>
+      </div>
+    </div>
+    <div v-if="ongoing">
+      <div class="content" v-for="todo in Ongoing" :key="todo">
       <Todo :content="todo.content" :id="todo.id" :progress="todo.inProgress" :date="todo.date" @changedProgress="toggleOngoing" @remmed="removeTodo" @updatedContent="changeContent"/>
+      </div>
     </div>
-  </div>
-  <div v-if="completed">
-    <div class="content" v-for="todo in Completed" :key="todo">
-      <Todo :content="todo.content" :id="todo.id" :progress="todo.inProgress" :date="todo.date" @changedProgress="toggleOngoing" @remmed="removeTodo" @updatedContent="changeContent"/>
+      <div v-if="datanav">
+      <div class="content" >
+        <TodoGroup v-for="group in Datanav" :todos="group" :key="group"/>  
+      </div>
     </div>
-  </div>
-  <div v-if="ongoing">
-    <div class="content" v-for="todo in Ongoing" :key="todo">
-     <Todo :content="todo.content" :id="todo.id" :progress="todo.inProgress" :date="todo.date" @changedProgress="toggleOngoing" @remmed="removeTodo" @updatedContent="changeContent"/>
+    <div v-if="addit">
+      <NewTodo @addtodo="updateTodos"/>
     </div>
-  </div>
-    <div v-if="datanav">
-    <div class="content" >
-      <TodoGroup v-for="group in Datanav" :todos="group" :key="group"/>  
-    </div>
-  </div>
-  <div v-if="addit">
-    <NewTodo @addtodo="updateTodos"/>
-  </div>
 
-  <router-link to="/sign-in" class="btn btn-primary relocate">Leave</router-link>
+    <router-link to="/sign-in" class="btn btn-primary relocate">Leave</router-link>
+  </div>
 </template>
 
 <script>
@@ -46,13 +48,22 @@ import NewTodo from "../components/NewTodo.vue"
 import TodoGroup from "../components/TodoByDate.vue"
 import TodoListItem from "../components/TodoListItem.vue"
 
+// import {isUserLogged} from "../views/SignInView.vue"
+
 export default {
   name: 'HomeView',
+
   components: {
     Todo, NewTodo, TodoGroup, TodoListItem
   },
+  props: {
+    isUserLogged: {
+      type: Boolean,
+      required: true,
+    }
+  },
+
   setup(){
-    //initial navigation
 
     const view_all = ref(true)
     const completed = ref(false)
@@ -140,6 +151,10 @@ export default {
 
         return dataGroupDone
     })
+
+    function redirectToLogin() {
+      this.$router.push('/sign-in');
+    }
 
     function toggleOngoing(theId){
       todos.value.forEach((todo) => {
@@ -236,6 +251,8 @@ export default {
   padding: 0px 10px;
   border: solid #2c2c2c 1.5px;
   border-radius: 5px;
+
+  background-color: #fefefe;
 }
 
 .content{

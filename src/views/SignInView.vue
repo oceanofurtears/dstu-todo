@@ -1,9 +1,7 @@
 <template>
   <div class="container">
     <div class="row align-items-center min-vh-100">
-      <div
-        class="col-12 col-sm-8 col-md-6 col-lg-4 offset-0 offset-sm-2 offset-md-3 offset-lg-4"
-      >
+      <div class="col-12 col-sm-8 col-md-6 col-lg-4 offset-0 offset-sm-2 offset-md-3 offset-lg-4">
         <form @submit.prevent="logInUser">
           <div class="mb-3 text-center">
             <img src="http://international.donstu.ru/wp-content/uploads/2019/01/IMG_4963.png" alt="DSTU Logo" class="logo">
@@ -54,17 +52,22 @@
 
       </div>
     </div>
+
   </div>
+
 </template>
 
 <script>
 
-import {useRouter} from "vue-router";
 import axios from "axios";
 
 export default {
-
+  
   name: "SignInView",
+
+  setup() {
+    let isUserLogged = false;
+  },
 
   data() {
     return {
@@ -77,37 +80,20 @@ export default {
   methods: {
 
     async logInUser() {
-      let userList = [];
-      let isUserFound = false;
+      let isUserLogged = false;
 
-      const data = await axios.request(
-          // 'http://localhost:5000/api/Authentication/users',
-           'https://jsonplaceholder.typicode.com/users', //! test api
+      const data = await axios.get(
+          'http://localhost:19452/api/Authentication/login',
             {email:this.email,
-            username:this.password})
+            password:this.password})
               .then(function (response) {
-                userList = response.data;
+                localStorage.setItem("userToken", response.data.token)
             })
               .catch(function (error) {
                 console.log(error);
             });
         
-        try {
-          for (let user = 0; user < userList.length; user++) {
-            if (this.email === userList[user].email & 
-                this.password === userList[user].username) {
-              isUserFound = true;
-              this.$router.push('/');
-              break;
-            }
-            
-          };
-        }
-        finally {
-          if (!isUserFound) {
-            alert("Пользователь не найден");
-          }
-        }
+      await this.$$router.push('/');
     },
   }
   

@@ -63,6 +63,7 @@
 
 export default {
   name: "SignUpView",
+
   data() {
     return {
       email: "",
@@ -74,9 +75,13 @@ export default {
   methods: {
 
     async signUpUser() {
+
+      let userList = [];
+      let isUserFound = false;
+
       const data = await axios.post(
-          'http://localhost:5000/api/Authentication/users',
-            // 'https://jsonplaceholder.typicode.com/users', //! test api
+          'http://localhost:19452/api/Authentication/register',
+           
           {email:this.email,
           password:this.password})
             .then(function (response) {
